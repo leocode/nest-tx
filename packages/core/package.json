@@ -1,8 +1,13 @@
 {
   "name": "@leocode/nest-tx-core",
   "version": "0.0.3",
-  "main": "dist/index.js",
   "author": "Tymoteusz Dzienniak",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc"
