@@ -1,6 +1,6 @@
 {
   "name": "@leocode/nest-tx-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
