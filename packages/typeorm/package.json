@@ -1,0 +1,25 @@
+{
+  "name": "@leocode/nest-tx-typeorm",
+  "version": "0.0.3",
+  "author": "Tymoteusz Dzienniak",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typeorm": "^0.2.31"
+  },
+  "peerDependencies": {
+    "typeorm": "^0.2.31",
+    "@leocode/nest-tx-core": "^0.0.3"
+  }
+}
