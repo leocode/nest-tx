@@ -10,10 +10,13 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "rimraf dist && tsc"
   },
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "1adad7f7b2e9e4dd9947ea7a22cb7eb4c36f67c4"
+  "gitHead": "1adad7f7b2e9e4dd9947ea7a22cb7eb4c36f67c4",
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
 }

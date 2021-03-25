@@ -10,16 +10,17 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "rimraf dist && tsc"
   },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "typeorm": "^0.2.31"
   },
   "peerDependencies": {
-    "typeorm": "^0.2.31",
-    "@leocode/nest-tx-core": "^0.0.3"
+    "@leocode/nest-tx-core": "^0.0.3",
+    "typeorm": "^0.2.31"
   }
 }
