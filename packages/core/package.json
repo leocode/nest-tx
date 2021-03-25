@@ -6,5 +6,9 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "1adad7f7b2e9e4dd9947ea7a22cb7eb4c36f67c4"
 }
