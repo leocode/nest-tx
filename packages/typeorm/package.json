@@ -16,11 +16,25 @@
     "access": "public"
   },
   "devDependencies": {
-    "rimraf": "^3.0.2",
-    "typeorm": "^0.2.31"
+    "@nestjs/common": "8.2.0",
+    "@nestjs/core": "8.2.0",
+    "@nestjs/testing": "^8.2.0",
+    "reflect-metadata": "0.1.13",
+    "rimraf": "3.0.2",
+    "rxjs": "7.4.0",
+    "tsm": "2.1.4",
+    "typescript": "4.4.4",
+    "uvu": "0.5.2",
+    "typeorm": "0.2.40"
   },
   "peerDependencies": {
+    "@nestjs/common": "^8.0.0",
+    "@nestjs/core": "^8.0.0",
     "@leocode/nest-tx-core": "^0.0.3",
     "typeorm": "^0.2.31"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leocode/nest-tx.git"
   }
 }
