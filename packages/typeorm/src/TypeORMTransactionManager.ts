@@ -1,4 +1,4 @@
-import { Connection, EntityManager, QueryFailedError } from 'typeorm';
+import { Connection, EntityManager, getConnection, QueryFailedError } from 'typeorm';
 import { Operation, TransactionManager, TransactionOptions, TypeORMOptions } from '@leocode/nest-tx-core';
 import { isTypeORMTransaction, TypeORMTransaction } from './TypeORMTransaction';
 import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver';
@@ -19,12 +19,13 @@ const isRetriableError = (err: unknown, connection: Connection): boolean => {
 
 export class TypeORMTransactionManager implements TransactionManager {
   constructor(
-    private readonly connection: Connection,
+    private readonly connectionName: string | undefined,
     private readonly defaultOptions: TypeORMOptions,
   ) {
   }
 
   async withTransaction<T>(fn: Operation<T>, options?: TransactionOptions): Promise<T> {
+    const connection = getConnection(this.connectionName);
     if (options?.activeTransaction) {
       if (!isTypeORMTransaction(options.activeTransaction)) {
         throw new NotATypeORMTransactionError('You are using TypeORM transaction manager - active transaction must be an instance of TypeORMTransaction class.');
@@ -44,12 +45,12 @@ export class TypeORMTransactionManager implements TransactionManager {
       while (true) {
         try {
           if (isolationLevel) {
-            return await this.connection.transaction(isolationLevel, runInTransaction);
+            return await connection.transaction(isolationLevel, runInTransaction);
           } else {
-            return await this.connection.transaction(runInTransaction);
+            return await connection.transaction(runInTransaction);
           }
         } catch (err: unknown) {
-          if (isRetriableError(err, this.connection) && retries <= maxRetries) {
+          if (isRetriableError(err, connection) && retries <= maxRetries) {
             retries += 1;
           } else {
             throw err;

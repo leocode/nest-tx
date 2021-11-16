@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { getTransactionManagerName, TypeORMOptions } from '@leocode/nest-tx-core';
-import { getConnection } from 'typeorm';
 import { TypeORMTransactionManager } from './TypeORMTransactionManager';
 
 type InjectionToken = string;
@@ -23,7 +22,7 @@ export class TypeORMTransactionManagerModule {
       provide: getTransactionManagerName(options.name),
       useFactory: () => {
         return new TypeORMTransactionManager(
-          getConnection(options.connectionName),
+          options.connectionName,
           defaultOptions,
         )
       }
