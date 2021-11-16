@@ -1,6 +1,6 @@
 {
   "name": "@leocode/nest-tx-core",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -34,5 +34,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leocode/nest-tx.git"
-  }
+  },
+  "gitHead": "23117fe057f1f4565368d0ad63745c985cd5ec1b"
 }
