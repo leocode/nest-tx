@@ -28,9 +28,9 @@
     "uvu": "0.5.2"
   },
   "peerDependencies": {
-    "@leocode/nest-tx-core": "^0.0.3",
-    "@nestjs/common": "^8.0.0",
-    "@nestjs/core": "^8.0.0",
+    "@leocode/nest-tx-core": ">= 1 < 2",
+    "@nestjs/common": ">= 7 < 9",
+    "@nestjs/core": ">= 7 < 9",
     "typeorm": "^0.2.31"
   },
   "repository": {
