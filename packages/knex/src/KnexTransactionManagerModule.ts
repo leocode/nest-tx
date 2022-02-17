@@ -1,13 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { getTransactionManagerName } from '@leocode/nest-tx-core';
 import { DefaultOptions, KnexTransactionManager } from './KnexTransactionManager';
-import { ModuleRef } from '@nestjs/core';
 import { Knex } from 'knex';
 
 type InjectionToken = string;
 
 export interface KnexTransactionManagerModuleOptions {
-  acquireConnection: (moduleRef: ModuleRef) => Knex;
+  getConnectionToken: () => InjectionToken;
   name?: InjectionToken;
   defaults?: DefaultOptions,
 }
@@ -22,15 +21,13 @@ export class KnexTransactionManagerModule {
 
     const providers = [{
       provide: getTransactionManagerName(options.name),
-      useFactory: (moduleRef: ModuleRef) => {
-        const knexInstance = options.acquireConnection(moduleRef);
-
+      useFactory: (knexInstance: Knex) => {
         return new KnexTransactionManager(
           knexInstance,
           defaultOptions,
         )
       },
-      inject: [ModuleRef],
+      inject: [options.getConnectionToken()],
     }];
 
     return {
