@@ -1,6 +1,6 @@
 {
   "name": "@leocode/nest-tx-typeorm",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
