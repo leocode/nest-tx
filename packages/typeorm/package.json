@@ -36,6 +36,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leocode/nest-tx.git"
-  },
-  "gitHead": "dc2bddda524568310781ae275c0eab6ea7ac7266"
+  }
 }
