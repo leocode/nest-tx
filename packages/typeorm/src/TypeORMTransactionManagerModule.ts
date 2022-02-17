@@ -1,13 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { getTransactionManagerName, TypeORMOptions } from '@leocode/nest-tx-core';
-import { TypeORMTransactionManager } from './TypeORMTransactionManager';
+import { getTransactionManagerName } from '@leocode/nest-tx-core';
+import { DefaultOptions, TypeORMTransactionManager } from './TypeORMTransactionManager';
 
 type InjectionToken = string;
 
 export interface TypeORMTransactionManagerModuleOptions {
   connectionName?: string;
   name?: InjectionToken;
-  defaults?: TypeORMOptions,
+  defaults?: DefaultOptions,
 }
 
 @Module({})

@@ -1,5 +1,5 @@
 import { Connection, EntityManager, getConnection, QueryFailedError } from 'typeorm';
-import { Operation, TransactionManager, TransactionOptions, TypeORMOptions } from '@leocode/nest-tx-core';
+import { Operation, SQLIsolationLevel, TransactionManager, TransactionOptions } from '@leocode/nest-tx-core';
 import { isTypeORMTransaction, TypeORMTransaction } from './TypeORMTransaction';
 import { PostgresDriver } from 'typeorm/driver/postgres/PostgresDriver';
 import { NotATypeORMTransactionError } from './NotATypeORMTransactionError';
@@ -17,10 +17,15 @@ const isRetriableError = (err: unknown, connection: Connection): boolean => {
   return false;
 }
 
+export interface DefaultOptions {
+  retries?: number;
+  isolationLevel?: SQLIsolationLevel;
+}
+
 export class TypeORMTransactionManager implements TransactionManager {
   constructor(
     private readonly connectionName: string | undefined,
-    private readonly defaultOptions: TypeORMOptions,
+    private readonly defaultOptions: DefaultOptions,
   ) {
   }
 
@@ -40,7 +45,7 @@ export class TypeORMTransactionManager implements TransactionManager {
       };
 
       let retries = 0;
-      const maxRetries = options?.typeorm?.retries ?? this.defaultOptions.retries ?? 0;
+      const maxRetries = options?.retries ?? this.defaultOptions.retries ?? 0;
 
       while (true) {
         try {
