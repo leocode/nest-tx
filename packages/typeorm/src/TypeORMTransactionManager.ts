@@ -19,10 +19,15 @@ const isRetriableError = (err: unknown, connection: Connection): boolean => {
     return false;
   }
 
+  // NOTE: Seems that the typescript doesn't agree on changing the type of err to QueryFailedError,
+  // even if the logical operator for instanceof checkes clearly that if anything other than instanceof QueryFailedError,
+  // returns false.
+  const error = err as QueryFailedError;
+
   // POSTGRESQL SERIALIZATION FAILURE
   if (
     connection.driver instanceof PostgresDriver &&
-    err.driverError.code === "40001"
+    error.driverError.code === "40001"
   ) {
     return true;
   }
@@ -30,14 +35,15 @@ const isRetriableError = (err: unknown, connection: Connection): boolean => {
   return false;
 };
 
-class ErrorWithStack extends Error {
-  constructor(error: Error, stack?: string) {
-    super(error.message);
-
+function errorWithStack(error: unknown, stack?: string) {
+  if (error instanceof Error) {
     // TODO: Drop the stacktrace to the point of .withTransaction call location.
-    // By looking for the first .withTransaction function mention in the stacktrace (top to bottom).
-    this.stack = stack;
+    // By looking for the first .withTransaction in the stacktrace (in top to bottom direction).
+
+    error.stack = stack;
   }
+
+  return error;
 }
 
 export class TypeORMTransactionManager implements TransactionManager {
@@ -70,22 +76,16 @@ export class TypeORMTransactionManager implements TransactionManager {
 
     const runInTransaction = async (manager: EntityManager) => {
       try {
-        return await fn(new TypeORMTransaction(manager)).catch((e: Error) => {
-          throw new ErrorWithStack(e, stack);
-        });
-      } catch (err: unknown | ErrorWithStack) {
-        if (err instanceof ErrorWithStack) {
-          throw err;
-        }
-
-        throw new ErrorWithStack(err as Error, stack);
+        return await fn(new TypeORMTransaction(manager));
+      } catch (err: unknown) {
+        throw errorWithStack(err, stack);
       }
     };
 
     let retries = 0;
 
     // NOTE: Wouldn't be better to split this function to recursive asynchronous function called on timeout?
-    // The above would require storing the promise resolve and reject for later chain.
+    // The above would require storing the promise resolve and reject for later return to the chain.
     while (true) {
       try {
         if (isolationLevel) {
@@ -103,11 +103,7 @@ export class TypeORMTransactionManager implements TransactionManager {
           continue;
         }
 
-        if (err instanceof ErrorWithStack) {
-          throw err;
-        }
-
-        throw new ErrorWithStack(err as Error, stack);
+        throw errorWithStack(err, stack);
       }
     }
   }
