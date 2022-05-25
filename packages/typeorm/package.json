@@ -1,5 +1,5 @@
 {
-  "name": "@leocode/nest-tx-typeorm",
+  "name": "@przemyslawwalczak/nest-tx-typeorm",
   "version": "1.0.0-alpha.4",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
@@ -28,14 +28,14 @@
     "uvu": "0.5.2"
   },
   "peerDependencies": {
-    "@leocode/nest-tx-core": "^0.0.3",
+    "@przemyslawwalczak/nest-tx-core": "^0.0.3",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "typeorm": "^0.2.31"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leocode/nest-tx.git"
+    "url": "git+https://github.com/przemyslawwalczak/nest-tx.git"
   },
   "gitHead": "dc2bddda524568310781ae275c0eab6ea7ac7266"
 }
