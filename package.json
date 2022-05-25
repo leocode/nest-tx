@@ -1,5 +1,5 @@
 {
-  "name": "@leocode/next-tx",
+  "name": "@przemyslawwalczak/next-tx",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -13,6 +13,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leocode/nest-tx.git"
+    "url": "git+https://github.com/przemyslawwalczak/nest-tx.git"
   }
 }
