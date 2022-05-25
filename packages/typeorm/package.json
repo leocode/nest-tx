@@ -1,6 +1,6 @@
 {
   "name": "@przemyslawwalczak/nest-tx-typeorm",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,9 +28,9 @@
     "uvu": "0.5.2"
   },
   "peerDependencies": {
-    "@przemyslawwalczak/nest-tx-core": "^0.0.3",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
+    "@przemyslawwalczak/nest-tx-core": "^0.0.3",
     "typeorm": "^0.2.31"
   },
   "repository": {
