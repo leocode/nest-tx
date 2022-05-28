@@ -31,11 +31,14 @@
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@przemyslawwalczak/nest-tx-core": "^0.0.3",
-    "typeorm": "^0.2.31"
+    "@przemyslawwalczak/typeorm": "^0.2.45-alpha"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/przemyslawwalczak/nest-tx.git"
   },
-  "gitHead": "dc2bddda524568310781ae275c0eab6ea7ac7266"
+  "gitHead": "dc2bddda524568310781ae275c0eab6ea7ac7266",
+  "dependencies": {
+    "@przemyslawwalczak/typeorm": "^0.2.45-alpha"
+  }
 }

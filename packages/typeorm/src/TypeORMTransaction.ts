@@ -1,8 +1,10 @@
-import { EntityManager } from 'typeorm';
-import { Transaction } from '@leocode/nest-tx-core';
-import { NotATypeORMTransactionError } from './NotATypeORMTransactionError';
+import { EntityManager } from "@przemyslawwalczak/typeorm";
+import { Transaction } from "@przemyslawwalczak/nest-tx-core";
+import { NotATypeORMTransactionError } from "./NotATypeORMTransactionError";
 
-export const isTypeORMTransaction = (tx: Transaction): tx is TypeORMTransaction => {
+export const isTypeORMTransaction = (
+  tx: Transaction
+): tx is TypeORMTransaction => {
   return tx instanceof TypeORMTransaction;
 };
 
@@ -11,10 +13,10 @@ export class TypeORMTransaction implements Transaction {
 }
 
 export const getEntityManagerFromTypeORMTransaction = (
-  tx: Transaction,
+  tx: Transaction
 ): EntityManager => {
   if (!isTypeORMTransaction(tx)) {
-    throw new NotATypeORMTransactionError('Not a TypeORM transaction.');
+    throw new NotATypeORMTransactionError("Not a TypeORM transaction.");
   }
 
   return tx.manager;

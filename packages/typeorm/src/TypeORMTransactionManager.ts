@@ -3,26 +3,25 @@ import {
   EntityManager,
   getConnection,
   QueryFailedError,
-} from "typeorm";
+} from "@przemyslawwalczak/typeorm";
 import {
   Operation,
   TransactionManager,
   TransactionOptions,
   TypeORMOptions,
-} from "@leocode/nest-tx-core";
+} from "@przemyslawwalczak/nest-tx-core";
 import { isTypeORMTransaction, TypeORMTransaction } from "./TypeORMTransaction";
 import { PostgresDriver } from "typeorm/driver/postgres/PostgresDriver";
 import { NotATypeORMTransactionError } from "./NotATypeORMTransactionError";
 
-const isRetriableError = (err: unknown, connection: Connection): boolean => {
-  if (!(err instanceof QueryFailedError)) {
+const isRetriableError = (error: any, connection: Connection): boolean => {
+  if (!(error instanceof QueryFailedError)) {
     return false;
   }
 
   // NOTE: Seems that the typescript doesn't agree on changing the type of err to QueryFailedError,
   // even if the logical operator for instanceof checkes clearly that if anything other than instanceof QueryFailedError,
   // returns false.
-  const error = err as QueryFailedError;
 
   // POSTGRESQL SERIALIZATION FAILURE
   if (
@@ -39,6 +38,7 @@ function errorWithStack(error: unknown, stack?: string) {
   if (error instanceof Error) {
     // TODO: Drop the stacktrace to the point of .withTransaction call location.
     // By looking for the first .withTransaction in the stacktrace (in top to bottom direction).
+    // TODO: Check if portion of the stack we are replacing to is the current stack.
 
     error.stack = stack;
   }
@@ -74,13 +74,9 @@ export class TypeORMTransactionManager implements TransactionManager {
 
     const { stack } = new Error();
 
-    const runInTransaction = async (manager: EntityManager) => {
-      try {
-        return await fn(new TypeORMTransaction(manager));
-      } catch (err: unknown) {
-        throw errorWithStack(err, stack);
-      }
-    };
+    // const runInTransaction = async (manager: EntityManager) => {
+    //   return await fn(new TypeORMTransaction(manager));
+    // };
 
     let retries = 0;
 
@@ -89,14 +85,23 @@ export class TypeORMTransactionManager implements TransactionManager {
     while (true) {
       try {
         if (isolationLevel) {
-          return await connection.transaction(isolationLevel, runInTransaction);
+          return await connection.transaction(
+            isolationLevel,
+            async function Transaction(manager: EntityManager) {
+              return await fn(new TypeORMTransaction(manager));
+            }
+          );
         }
 
         if (options?.activeTransaction) {
           return await fn(options.activeTransaction);
         }
 
-        return await connection.transaction(runInTransaction);
+        return await connection.transaction(async function Transaction(
+          manager: EntityManager
+        ) {
+          return await fn(new TypeORMTransaction(manager));
+        });
       } catch (err: unknown) {
         if (isRetriableError(err, connection) && retries <= maxRetries) {
           retries += 1;
