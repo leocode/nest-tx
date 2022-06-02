@@ -1,5 +1,5 @@
-import { Inject } from '@nestjs/common'
-import { getTransactionManagerName } from './TransactionManager';
+import { Inject } from "@nestjs/common";
+import { getTransactionManagerName } from "./TransactionManager";
 
-export const InjectTransactionManager = (name? : string) =>
-  Inject(getTransactionManagerName(name))
+export const InjectTransactionManager = (name?: string) =>
+  Inject(getTransactionManagerName(name));

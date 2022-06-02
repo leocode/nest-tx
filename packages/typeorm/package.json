@@ -30,8 +30,7 @@
   "peerDependencies": {
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
-    "@przemyslawwalczak/nest-tx-core": "^0.0.3",
-    "@przemyslawwalczak/typeorm": "^0.2.45-alpha"
+    "@przemyslawwalczak/nest-tx-core": "^0.0.3"
   },
   "repository": {
     "type": "git",
@@ -39,6 +38,6 @@
   },
   "gitHead": "dc2bddda524568310781ae275c0eab6ea7ac7266",
   "dependencies": {
-    "@przemyslawwalczak/typeorm": "^0.2.45-alpha"
+    "typeorm": "^0.3.6"
   }
 }

@@ -1,4 +1,4 @@
-import { EntityManager } from "@przemyslawwalczak/typeorm";
+import { EntityManager } from "typeorm";
 import { Transaction } from "@przemyslawwalczak/nest-tx-core";
 import { NotATypeORMTransactionError } from "./NotATypeORMTransactionError";
 

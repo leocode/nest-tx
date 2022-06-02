@@ -1,6 +1,10 @@
-import { Transaction } from './Transaction';
+import { Transaction } from "./Transaction";
 
-export type SQLIsolationLevel = 'READ UNCOMMITTED' | 'READ COMMITTED' | 'REPEATABLE READ' | 'SERIALIZABLE';
+export type SQLIsolationLevel =
+  | "READ UNCOMMITTED"
+  | "READ COMMITTED"
+  | "REPEATABLE READ"
+  | "SERIALIZABLE";
 
 export interface TypeORMOptions {
   retries?: number;
@@ -14,10 +18,15 @@ export interface TransactionOptions {
   typeorm?: TypeORMOptions;
 }
 
-const DEFAULT_TRANSACTION_MANAGER = 'default';
+const DEFAULT_TRANSACTION_MANAGER = "default";
 
-export const getTransactionManagerName = (name: string = DEFAULT_TRANSACTION_MANAGER) => `${ name }TransactionManager`;
+export const getTransactionManagerName = (
+  name: string = DEFAULT_TRANSACTION_MANAGER
+) => `${name}TransactionManager`;
 
 export interface TransactionManager {
-  withTransaction<T>(fn: Operation<T>, options?: TransactionOptions): Promise<T>;
+  withTransaction<T>(
+    fn: Operation<T>,
+    options?: TransactionOptions
+  ): Promise<T>;
 }
