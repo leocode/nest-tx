@@ -4,10 +4,18 @@
 
 ## Motivation
 
-Transaction management is usually done in application services, which should not have knowledge of implementation details
-like DB engine or DB access library (like TypeORM). This way you can change the underlying DB technology without modifying
+Transaction management is usually done in application services, which should not have knowledge of implementation
+details
+like DB engine or DB access library (like TypeORM). This way you can change the underlying DB technology without
+modifying
 business logic. `@leocode/nest-tx-core` provides an abstract way of managing transactions - it is not tied to any
-particular database, driver or ORM. It can be used with many libraries and drivers by using adapters (like `@leocode/nest-tx-typeorm`). 
+particular database, driver or ORM. It can be used with many libraries and drivers by using adapters (
+like `@leocode/nest-tx-typeorm`).
+
+## Currently supported ORMs/query builders/drivers:
+
+- Knex
+- TypeORM
 
 ## Installation
 
@@ -37,7 +45,6 @@ import { TypeORMTransactionManagerModule } from '@leocode/nest-tx-typeorm';
   ],
 })
 export class AppModule {}
-
 ```
 
 Then you can use
@@ -56,8 +63,8 @@ class CatsService {
   async save() {
     await this.transactionManager.withTransaction(async (tx) => {
       /**
-       * NOTE: Usually you should write code like this in separate repository class -
-       * it's written here for example brevity. 
+       * NOTE: Usually you should write code like this in a separate repository class -
+       * it's written here for the example brevity.
        */
       const manager = getEntityManagerFromTypeORMTransaction(tx);
 
@@ -66,3 +73,8 @@ class CatsService {
   }
 }
 ```
+
+Consult the README file in each package to see how to use it:
+
+- [knex](./packages/knex/README.md)
+- [typeorm](./packages/typeorm/README.md)

@@ -15,7 +15,6 @@ export interface KnexOptions {
 export type Operation<T> = (tx: Transaction) => Promise<T>;
 
 export interface TransactionOptions {
-  retries?: number;
   activeTransaction?: Transaction;
   typeorm?: TypeORMOptions;
   knex?: KnexOptions;
