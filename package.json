@@ -6,9 +6,15 @@
   ],
   "scripts": {
     "build": "yarn workspaces run build",
-    "publish-packages": "lerna publish"
+    "publish-packages": "lerna publish",
+    "pretest": "yarn build",
+    "test": "yarn workspaces run test"
   },
   "devDependencies": {
     "lerna": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leocode/nest-tx.git"
   }
 }

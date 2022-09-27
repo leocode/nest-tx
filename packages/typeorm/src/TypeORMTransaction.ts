@@ -1,19 +1,22 @@
 import { EntityManager } from 'typeorm';
 import { Transaction } from '@leocode/nest-tx-core';
+import { NotATypeORMTransactionError } from './NotATypeORMTransactionError';
 
-const isTypeORMTransaction = (tx: Transaction): tx is TypeORMTransaction => {
+declare module '@leocode/nest-tx-core' {
+  interface Transaction {
+    getEntityManager: () => EntityManager;
+  }
+}
+
+export const isTypeORMTransaction = (tx: Transaction): tx is TypeORMTransaction => {
   return tx instanceof TypeORMTransaction;
 };
 
 export class TypeORMTransaction implements Transaction {
   constructor(public manager: EntityManager) {}
 
-  async commit(): Promise<void> {
-    // noop for this implementation
-  }
-
-  async rollback(): Promise<void> {
-    // noop for this implementation
+  getEntityManager() {
+    return getEntityManagerFromTypeORMTransaction(this);
   }
 }
 
@@ -21,7 +24,7 @@ export const getEntityManagerFromTypeORMTransaction = (
   tx: Transaction,
 ): EntityManager => {
   if (!isTypeORMTransaction(tx)) {
-    throw new Error('Not a TypeORM transaction.');
+    throw new NotATypeORMTransactionError('Not a TypeORM transaction.');
   }
 
   return tx.manager;
