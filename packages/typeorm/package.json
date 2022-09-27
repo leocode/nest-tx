@@ -1,12 +1,13 @@
 {
   "name": "@leocode/nest-tx-typeorm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Tymoteusz Dzienniak",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "README.md"
   ],
   "license": "MIT",
   "scripts": {
