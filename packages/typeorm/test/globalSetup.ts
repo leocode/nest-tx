@@ -1,5 +1,5 @@
 import { GenericContainer } from 'testcontainers';
-import { saveConfigVariable } from '../../utils';
+import { saveConfigVariable } from 'nest-tx-utils';
 
 async function spawnDatabase() {
   return new GenericContainer('postgres:14')
@@ -10,8 +10,6 @@ async function spawnDatabase() {
     .withTmpFs({ '/temp_pgdata': 'rw,noexec,nosuid,size=65536k' })
     .start();
 }
-
-// const migrateDB
 
 async function setupDatabase(): Promise<void> {
   const container = await spawnDatabase();
