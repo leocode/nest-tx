@@ -1,9 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getKnexConnectionToken, KnexModule } from 'nestjs-knex';
-import { getTransactionManagerName, TransactionManager } from '@leocode/nest-tx-core';
+import {
+  getTransactionFromContext,
+  getTransactionManagerName,
+  Transactional,
+  TransactionManager
+} from '@leocode/nest-tx-core';
 import { KnexTransactionManagerModule } from './KnexTransactionManagerModule';
 import { Knex } from 'knex';
 import { readConfigVariable } from 'nest-tx-utils';
+import { Inject, Injectable } from '@nestjs/common';
 import CreateTableBuilder = Knex.CreateTableBuilder;
 
 const TEST_TABLE = 'test';
@@ -13,6 +19,27 @@ interface TestEntity {
 }
 
 class CustomError extends Error {
+}
+
+@Injectable()
+class ChildService {
+  @Transactional()
+  public async testOperation() {
+    const knexTx = getTransactionFromContext().getKnexTransaction();
+
+    return await knexTx.raw('select 1 + 1 as "sum"');
+  }
+}
+
+@Injectable()
+class ParentService {
+  constructor(@Inject(ChildService) private childService: ChildService) {
+  }
+
+  @Transactional()
+  public async testOperation() {
+    return await this.childService.testOperation();
+  }
 }
 
 describe('KnexTransactionManager', () => {
@@ -44,7 +71,8 @@ describe('KnexTransactionManager', () => {
             return getKnexConnectionToken('');
           },
         }),
-      ]
+      ],
+      providers: [ParentService, ChildService]
     }).compile()
 
     txManager = moduleRef.get<TransactionManager>(getTransactionManagerName());
@@ -125,4 +153,14 @@ describe('KnexTransactionManager', () => {
     const rows = await knex<TestEntity>(TEST_TABLE).select();
     expect(rows).toHaveLength(0);
   });
+
+  describe('Transactional', () => {
+    it('should reuse existing tx in a child method', async () => {
+      const parentService = moduleRef.get(ParentService);
+
+      const result = await parentService.testOperation();
+
+      expect(result.rows[0].sum).toBe(2);
+    });
+  })
 });

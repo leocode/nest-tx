@@ -3,3 +3,4 @@ export * from './TransactionManager';
 export * from './NoopTransaction';
 export * from './NoopTransactionManagerModule';
 export * from './decorators';
+export * from './types';

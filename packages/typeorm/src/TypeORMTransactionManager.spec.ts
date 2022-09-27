@@ -1,9 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getTransactionManagerName, TransactionManager } from '@leocode/nest-tx-core';
+import {
+  getTransactionFromContext,
+  getTransactionManagerName,
+  Transactional,
+  TransactionManager
+} from '@leocode/nest-tx-core';
 import { TypeORMTransactionManagerModule } from './TypeORMTransactionManagerModule';
 import { readConfigVariable } from 'nest-tx-utils';
 import { getConnectionToken, TypeOrmModule } from '@nestjs/typeorm';
 import { Connection, Entity, EntitySchema } from 'typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 
 const TEST_TABLE = 'test';
 
@@ -28,6 +34,27 @@ const TestEntitySchema = new EntitySchema<TestEntity>({
 class CustomError extends Error {
 }
 
+@Injectable()
+class ChildService {
+  @Transactional()
+  public async testOperation() {
+    const manager = getTransactionFromContext().getEntityManager();
+
+    return await manager.query('select 1 + 1 as "sum"');
+  }
+}
+
+@Injectable()
+class ParentService {
+  constructor(@Inject(ChildService) private childService: ChildService) {
+  }
+
+  @Transactional()
+  public async testOperation() {
+    return await this.childService.testOperation();
+  }
+}
+
 describe('TypeORMTransactionManager', () => {
   let txManager: TransactionManager;
   let moduleRef: TestingModule;
@@ -48,7 +75,8 @@ describe('TypeORMTransactionManager', () => {
           entities: [TestEntitySchema],
         }),
         TypeORMTransactionManagerModule.forRoot(),
-      ]
+      ],
+      providers: [ParentService, ChildService],
     }).compile()
 
     txManager = moduleRef.get(getTransactionManagerName());
@@ -132,4 +160,17 @@ describe('TypeORMTransactionManager', () => {
     const rows = await connection.manager.find(TestEntity);
     expect(rows).toHaveLength(0);
   });
+
+
+  describe('Transactional', () => {
+    it('should reuse existing tx in a child method', async () => {
+      const parentService = moduleRef.get(ParentService);
+
+      const result = await parentService.testOperation();
+
+      expect(result[0]).toEqual({
+        sum: 2,
+      });
+    });
+  })
 });
