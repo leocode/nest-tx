@@ -9,6 +9,8 @@ import {
   Transactional
 } from '../';
 
+const simulatedAsyncWorkload = () => setTimeout(0);
+
 describe('Transactional', () => {
   it('should reuse existing tx in child', async () => {
     // given
@@ -18,7 +20,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.Required,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         return getTransactionFromContext();
       }
     }
@@ -32,7 +34,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.Required,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         const tx = getTransactionFromContext();
 
         const childTx = await this.childService.testOperation();
@@ -62,7 +64,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.RequiresNew,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         return getTransactionFromContext();
       }
     }
@@ -76,7 +78,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.Required,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         const txPre = getTransactionFromContext();
         const childTx = await this.childService.testOperation();
         const txPost = getTransactionFromContext();
@@ -112,7 +114,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.Mandatory,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         return getTransactionFromContext();
       }
     }
@@ -126,7 +128,7 @@ describe('Transactional', () => {
         propagation: PropagationLevel.Required,
       })
       public async testOperation() {
-        await setTimeout(1);
+        await simulatedAsyncWorkload();
         const tx = getTransactionFromContext();
         const childTx = await this.childService.testOperation();
 
