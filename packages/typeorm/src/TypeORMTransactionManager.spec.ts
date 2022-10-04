@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getTransactionManagerName, TransactionManager } from '@leocode/nest-tx-core';
 import { TypeORMTransactionManagerModule } from './TypeORMTransactionManagerModule';
 import { readConfigVariable } from 'nest-tx-utils';
-import { getConnectionToken, TypeOrmModule } from '@nestjs/typeorm';
-import { Connection, Entity, EntitySchema } from 'typeorm';
+import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource, Entity, EntitySchema } from 'typeorm';
 
 const TEST_TABLE = 'test';
 
@@ -31,7 +31,7 @@ class CustomError extends Error {
 describe('TypeORMTransactionManager', () => {
   let txManager: TransactionManager;
   let moduleRef: TestingModule;
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
     const port = await readConfigVariable('databasePort');
@@ -47,12 +47,16 @@ describe('TypeORMTransactionManager', () => {
           database: 'postgres',
           entities: [TestEntitySchema],
         }),
-        TypeORMTransactionManagerModule.forRoot(),
+        TypeORMTransactionManagerModule.forRoot({
+          getDataSourceToken: () => {
+            return getDataSourceToken();
+          },
+        }),
       ]
     }).compile()
 
     txManager = moduleRef.get(getTransactionManagerName());
-    connection = moduleRef.get(getConnectionToken())
+    dataSource = moduleRef.get(getDataSourceToken())
   });
 
   afterAll(async () => {
@@ -60,8 +64,8 @@ describe('TypeORMTransactionManager', () => {
   })
 
   beforeEach(async () => {
-    await connection.manager.query(`DROP TABLE IF EXISTS ${ TEST_TABLE }`)
-    await connection.manager.query(
+    await dataSource.manager.query(`DROP TABLE IF EXISTS ${ TEST_TABLE }`)
+    await dataSource.manager.query(
       `CREATE TABLE ${ TEST_TABLE }
        (
            id int primary key
@@ -103,7 +107,7 @@ describe('TypeORMTransactionManager', () => {
     });
 
     // then
-    const insertedRows = await connection.manager.find(TestEntity);
+    const insertedRows = await dataSource.manager.find(TestEntity);
 
     expect(insertedRows).toEqual([{
       id: 1,
@@ -129,7 +133,7 @@ describe('TypeORMTransactionManager', () => {
     // then
     await expect(txPromise).rejects.toBeInstanceOf(CustomError);
 
-    const rows = await connection.manager.find(TestEntity);
+    const rows = await dataSource.manager.find(TestEntity);
     expect(rows).toHaveLength(0);
   });
 });
