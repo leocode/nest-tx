@@ -1,0 +1,47 @@
+{
+  "name": "@leocode/nest-tx-kysely",
+  "version": "1.0.0",
+  "author": "Tymoteusz Dzienniak",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "test": "jest --config test/jest.config.js --runInBand"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@nestjs/common": "9.1.2",
+    "@nestjs/core": "9.1.2",
+    "@nestjs/testing": "9.1.2",
+    "@types/jest": "29.0.3",
+    "@types/pg": "^8.6.5",
+    "jest": "29.0.3",
+    "kysely": "0.22.0",
+    "nest-tx-utils": "*",
+    "pg": "8.8.0",
+    "reflect-metadata": "0.1.13",
+    "rimraf": "3.0.2",
+    "rxjs": "7.5.7",
+    "testcontainers": "8.14.0",
+    "ts-jest": "29.0.2",
+    "typescript": "4.8.3"
+  },
+  "peerDependencies": {
+    "@leocode/nest-tx-core": ">= 1 < 2",
+    "@nestjs/common": ">= 7 < 10",
+    "@nestjs/core": ">= 7 < 10",
+    "kysely": "< 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leocode/nest-tx.git"
+  }
+}
