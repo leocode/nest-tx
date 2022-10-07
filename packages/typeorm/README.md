@@ -18,11 +18,11 @@ npm install next-tx-core nest-tx-typeorm
 
 ## Usage
 
-Initialize the module first. Here we are using `@nestjs/typeorm` packed to initialize Knex connection:
+Initialize the module first. Here we are using `@nestjs/typeorm` package to initialize a TypeORM connection:
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { getConnectionToken, TypeOrmModule } from '@nestjs/typeorm';
+import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionManager } from '@leocode/nest-tx-core';
 import { TypeORMTransactionManagerModule } from '@leocode/nest-tx-typeorm';
 
@@ -37,7 +37,9 @@ import { TypeORMTransactionManagerModule } from '@leocode/nest-tx-typeorm';
       database: 'postgres',
       entities: [TestEntitySchema],
     }),
-    TypeORMTransactionManagerModule.forRoot(),
+    TypeORMTransactionManagerModule.forRoot({
+      getDataSourceToken: () => getDataSourceToken(),
+    }),
   ],
 })
 class AppModule {}
@@ -62,7 +64,7 @@ class CatsService {
 
   public async save() {
     await this.transactionManager.withTransaction(async tx => {
-      const manager = getEntityManagerFromTypeORMTransaction(tx);
+      const manager = tx.getEntityManager();
 
       const qb = await manager
         .createQueryBuilder()
@@ -101,10 +103,13 @@ If you have multiple named TypeORM connections, you can provide an instance of t
       entities: [TestEntitySchema],
     }),
     // tx manager for the default connection
-    TypeORMTransactionManagerModule.forRoot(),
+    TypeORMTransactionManagerModule.forRoot({
+      getDataSourceToken: () => getDataSourceToken(),
+    }),
     // tx manager for the 'secondConnection' connection
     TypeORMTransactionManagerModule.forRoot({
-      connectionName: 'secondConnection'
+      getDataSourceToken: () => getDataSourceToken('secondConnection'),
+      name: 'secondConnection'
     }),
   ],
 })
@@ -118,7 +123,6 @@ Then in the service, you need to use the connection name in the injection decora
 class CatsService {
   constructor(
     @InjectTransactionManager('secondConnection') private readonly transactionManager: TransactionManager,
-  ) {
-  }
+  ) {}
 }
 ```
