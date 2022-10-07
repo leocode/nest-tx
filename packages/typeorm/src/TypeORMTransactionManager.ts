@@ -1,4 +1,4 @@
-import { DataSource, EntityManager, getConnection } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { Operation, SQLIsolationLevel, TransactionManager, TransactionOptions } from '@leocode/nest-tx-core';
 import { isTypeORMTransaction, TypeORMTransaction } from './TypeORMTransaction';
 import { NotATypeORMTransactionError } from './NotATypeORMTransactionError';
